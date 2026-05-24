@@ -1,5 +1,5 @@
 import supabase from '../lib/supabase';
-import { mapBookingFromDb, mapProfileFromDb, mapServiceFromDb, mapServiceToDb, mapComplaintFromDb, mapComplaintToDb } from '../utils/supabaseHelpers';
+import { mapBookingFromDb, mapProfileFromDb, mapServiceFromDb, mapServiceToDb, mapComplaintFromDb, mapComplaintToDb, mapCategoryFromDb, mapCategoryToDb } from '../utils/supabaseHelpers';
 
 const adminService = {
   getDashboardStats: async () => {
@@ -203,6 +203,45 @@ const adminService = {
       .from('profiles')
       .delete()
       .eq('id', providerId);
+
+    if (error) throw new Error(error.message);
+    return { success: true };
+  },
+
+  getAllCategories: async () => {
+    const { data, error } = await supabase
+      .from('service_categories')
+      .select('*')
+      .order('label', { ascending: true });
+
+    if (error) throw new Error(error.message);
+    return data.map(mapCategoryFromDb);
+  },
+
+  createCategory: async (categoryData) => {
+    const id = categoryData.id || categoryData.label.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+    const newCategory = {
+      id,
+      label: categoryData.label,
+      icon: categoryData.icon || 'FaWrench',
+      color: categoryData.color || '#f59e0b'
+    };
+
+    const dbCategory = mapCategoryToDb(newCategory);
+
+    const { error } = await supabase
+      .from('service_categories')
+      .insert([dbCategory]);
+
+    if (error) throw new Error(error.message);
+    return { success: true, category: newCategory };
+  },
+
+  deleteCategory: async (categoryId) => {
+    const { error } = await supabase
+      .from('service_categories')
+      .delete()
+      .eq('id', categoryId);
 
     if (error) throw new Error(error.message);
     return { success: true };

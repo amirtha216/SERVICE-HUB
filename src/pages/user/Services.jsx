@@ -13,18 +13,30 @@ const Services = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
+  const [categories, setCategories] = useState(SERVICE_CATEGORIES);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedProvider, setSelectedProvider] = useState(null);
 
   useEffect(() => {
-    const fetchServices = async () => {
-      const data = await bookingService.getServices();
-      setServices(data);
-      setLoading(false);
+    const fetchServicesAndCategories = async () => {
+      try {
+        const [servicesData, categoriesData] = await Promise.all([
+          bookingService.getServices(),
+          bookingService.getCategories()
+        ]);
+        setServices(servicesData);
+        if (categoriesData && categoriesData.length > 0) {
+          setCategories(categoriesData);
+        }
+      } catch (e) {
+        console.error('Failed to fetch services or categories:', e);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchServices();
+    fetchServicesAndCategories();
   }, []);
 
   useEffect(() => {
@@ -122,7 +134,7 @@ const Services = () => {
         >
           All Services
         </button>
-        {SERVICE_CATEGORIES.map(category => (
+        {categories.map(category => (
           <button
             key={category.id}
             onClick={() => setSelectedCategory(category.id)}

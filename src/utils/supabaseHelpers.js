@@ -230,3 +230,27 @@ export const mapComplaintToDb = (jsComplaint) => {
   return dbData;
 };
 
+export const mapCategoryFromDb = (dbCategory) => {
+  if (!dbCategory) return null;
+  return {
+    id: dbCategory.id,
+    label: dbCategory.label,
+    icon: dbCategory.icon,
+    color: dbCategory.color,
+    createdAt: dbCategory.created_at
+  };
+};
+
+export const mapCategoryToDb = (jsCategory) => {
+  if (!jsCategory) return null;
+  const dbData = {};
+
+  if (jsCategory.id !== undefined) dbData.id = jsCategory.id;
+  if (jsCategory.label !== undefined) dbData.label = jsCategory.label;
+  if (jsCategory.icon !== undefined) dbData.icon = jsCategory.icon;
+  if (jsCategory.color !== undefined) dbData.color = jsCategory.color;
+
+  return dbData;
+};
+
+

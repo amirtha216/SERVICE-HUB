@@ -1,6 +1,6 @@
 import supabase from '../lib/supabase';
 import { calculateDistance } from '../utils/helpers';
-import { mapBookingFromDb, mapBookingToDb, mapProfileFromDb, mapServiceFromDb, mapComplaintToDb } from '../utils/supabaseHelpers';
+import { mapBookingFromDb, mapBookingToDb, mapProfileFromDb, mapServiceFromDb, mapComplaintToDb, mapCategoryFromDb } from '../utils/supabaseHelpers';
 
 const DEFAULT_LAT = 13.0827;
 const DEFAULT_LNG = 80.2707;
@@ -356,6 +356,19 @@ const bookingService = {
       throw new Error(error.message);
     }
     return newComplaint;
+  },
+
+  getCategories: async () => {
+    const { data, error } = await supabase
+      .from('service_categories')
+      .select('*')
+      .order('label', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching categories:', error);
+      return [];
+    }
+    return data.map(mapCategoryFromDb);
   }
 };
 
