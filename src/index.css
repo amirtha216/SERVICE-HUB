@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --card-bg: #1e293b;
+    --nav-bg: rgba(15, 23, 42, 0.8);
+    --sidebar-bg: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .light {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --card-bg: #ffffff;
+    --nav-bg: rgba(255, 255, 255, 0.8);
+    --sidebar-bg: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] font-sans antialiased transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/[0.04] backdrop-blur-md border border-white/[0.05];
+  }
+  
+  .glass-card {
+    @apply bg-[var(--card-bg)] backdrop-blur-xl border border-[var(--border-color)] shadow-xl;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-rose-500;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Leaflet Map Overrides for Dark Mode */
+.dark .leaflet-layer,
+.dark .leaflet-control-zoom-in,
+.dark .leaflet-control-zoom-out,
+.dark .leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
